@@ -16,8 +16,13 @@ PicoScope 5000 Series - [MATLAB Generic Instrument Driver](http://uk.mathworks.c
 
 ### Prerequisites
 
-* [MATLAB](https://uk.mathworks.com/products/matlab.html) for Microsoft Windows or Linux operating systems.
+* [MATLAB](https://uk.mathworks.com/products/matlab.html) for Microsoft Windows (32- or 64-bit) or Linux operating systems (64-bit).
 * The [PicoScope Support Toolbox](http://uk.mathworks.com/matlabcentral/fileexchange/53681-picoscope-support-toolbox)
+
+**Notes:**
+
+* MATLAB 2015b is recommended for 32-bit versions of MATLAB on Microsoft Windows operating systems.
+* Support for MATLAB on Mac OS X is limited. Please contact our [Technical Support Team](https://github.com/picotech/picosdk-ps5000-matlab-examples#obtaining-support) for further information.
 
 ### Installing drivers
 
@@ -33,11 +38,11 @@ Drivers are available for the following platforms. Refer to the subsections belo
 
 #### Mac OS X
 
-* Visit our [Downloads page](https://www.picotech.com/downloads) and download the PicoScope Beta for Mac OS X application. Contact our Technical Support Team for further information.
+* Visit our [Downloads page](https://www.picotech.com/downloads) and download the PicoScope Beta for Mac OS X application. Contact our [Technical Support Team](https://github.com/picotech/picosdk-ps5000-matlab-examples#obtaining-support) for further information.
 
 ### Programmer's Guides
 
-You can download the Programmer's Guides providing a description of the API functions for the relevant PicoScope or PicoLog driver from our [Documentation page](https://www.picotech.com/library/documentation).
+You can download the Programmer's Guide providing a description of the API functions for the ps5000 driver from our [Documentation page](https://www.picotech.com/library/documentation).
 
 ## Obtaining support
 
@@ -47,7 +52,9 @@ Please leave a comment and rating for this submission on our [MATLAB Central Fil
 
 ## Copyright and licensing
 
-picosdk-ps5000-matlab-examples is Copyright (C) 2015 - 2017 Pico Technology Ltd. All rights reserved. See [LICENSE.md](LICENSE.md) for license terms. *PicoScope* is a registered trademark of Pico Technology Ltd. 
+picosdk-ps5000-matlab-examples is Copyright (C) 2015 - 2017 Pico Technology Ltd. All rights reserved. See [LICENSE.md](LICENSE.md) for license terms. 
+
+*PicoScope* is a registered trademark of Pico Technology Ltd. 
 
 *MATLAB* is a registered trademark of The Mathworks, Inc. *Signal Processing Toolbox*
 is a trademark of The Mathworks, Inc.
