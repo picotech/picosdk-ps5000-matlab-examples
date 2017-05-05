@@ -22,7 +22,6 @@ Please note that these examples are not compatible with the PicoScope 5000A/B Se
 **Notes:**
 
 * MATLAB 2015b is recommended for 32-bit versions of MATLAB on Microsoft Windows operating systems.
-* Support for MATLAB on Mac OS X is limited. Please contact our [Technical Support Team](https://github.com/picotech/picosdk-ps5000-matlab-examples#obtaining-support) for further information.
 
 ### Installing drivers
 
@@ -34,11 +33,7 @@ Drivers are available for the following platforms. Refer to the subsections belo
 
 #### Linux
 
-* Follow the instructions from our [Linux Software & Drivers for Oscilloscopes and Data Loggers](https://www.picotech.com/downloads/linux) to install the required libps5000 driver package. For streaming data collection, the libpswrappers driver package will also need to be installed.
-
-#### Mac OS X
-
-* Visit our [Downloads page](https://www.picotech.com/downloads) and download the PicoScope Beta for Mac OS X application. Contact our [Technical Support Team](https://github.com/picotech/picosdk-ps5000-matlab-examples#obtaining-support) for further information.
+* Follow the instructions from our [Linux Software & Drivers for Oscilloscopes and Data Loggers](https://www.picotech.com/downloads/linux) to install the required `libps5000` driver package. For streaming data collection, the `libpswrappers` driver package will also need to be installed.
 
 ### Programmer's Guides
 
@@ -60,8 +55,6 @@ picosdk-ps5000-matlab-examples is Copyright (C) 2015 - 2017 Pico Technology Ltd.
 is a trademark of The Mathworks, Inc.
 
 *Windows* is a registered trademark of Microsoft Corporation. 
-
-*Mac* and *OS X* are registered trademarks of Apple, Inc. 
 
 *Linux* is the registered trademark of Linus Torvalds in the U.S. and other countries.
 
