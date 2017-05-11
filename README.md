@@ -48,6 +48,8 @@ You can download the Programmer's Guide providing a description of the API funct
 
 Please visit our [Support page](https://www.picotech.com/tech-support) to contact us directly or visit our [Test and Measurement Forum](https://www.picotech.com/support/forum71.html) to post questions.
 
+Issues can be reported via the [Issues tab](https://github.com/picotech/picosdk-ps5000-matlab-examples/issues).
+
 Please leave a comment and rating for this submission on our [MATLAB Central File Exchange page](https://uk.mathworks.com/matlabcentral/fileexchange/59657-picoscope-5203-and-5204-examples).
 
 ## Copyright and licensing
