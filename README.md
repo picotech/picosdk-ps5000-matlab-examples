@@ -1,6 +1,6 @@
 # PicoScope 5203 and 5204 Examples
 
-picosdk-ps5000-matlab-examples is a set of MATLAB examples demonstrating how to call shared library functions to acquire data from the 
+*picosdk-ps5000-matlab-examples* is a set of MATLAB examples demonstrating how to call shared library functions to acquire data from the 
 PicoScope® 5203 and 5204 Oscilloscopes and control in-built signal generator functionality. The data could be processed in MATLAB using 
 functions from Toolboxes such as [Signal Processing Toolbox](https://www.mathworks.com/products/signal.html). 
 
