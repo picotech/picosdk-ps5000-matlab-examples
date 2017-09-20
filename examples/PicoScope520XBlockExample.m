@@ -114,7 +114,7 @@ fprintf('Variant: %s\n', variant);
 fprintf('Serial : %s\n\n', serial);
 
 %% Set channels
-% Set channel A to use DC coupling with an input range of ±2 V 
+% Set channel A to use DC coupling with an input range of ±2 volts 
 
 enabled         = PicoConstants.TRUE;
 dc              = PicoConstants.TRUE;
@@ -195,7 +195,7 @@ h = helpdlg('Connect Signal Out to channel A and click OK.', 'Connect Input Sign
 uiwait(h);
            
 %% Start signal generator
-% Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 Volts.
+% Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 volts.
 
 offsetVoltage   = 0; % Offset in microvolts
 pkToPk          = 3000000; % Peak-to-peak amplitude in microvolts

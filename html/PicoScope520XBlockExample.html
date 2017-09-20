@@ -145,7 +145,7 @@ Driver : 1.7.0.8
 Variant: 5204
 Serial : AY791/043
 
-</pre><h2 id="7">Set channels</h2><p>Set channel A to use DC coupling with an input range of &plusmn;2 V</p><pre class="codeinput">enabled         = PicoConstants.TRUE;
+</pre><h2 id="7">Set channels</h2><p>Set channel A to use DC coupling with an input range of &plusmn;2 volts</p><pre class="codeinput">enabled         = PicoConstants.TRUE;
 dc              = PicoConstants.TRUE;
 channelARange   = ps5000Enuminfo.enPS5000Range.PS5000_2V;
 channelARangeMv = PicoConstants.SCOPE_INPUT_RANGES(channelARange + 1); <span class="comment">% Used later in the script</span>
@@ -196,7 +196,7 @@ autoTriggerMs   = 5000; <span class="comment">% 5 second auto trigger</span>
                                 channelA, threshold, direction, delay, autoTriggerMs);
 </pre><h2 id="10">Prompt to connect signal out to channel A</h2><pre class="codeinput">h = helpdlg(<span class="string">'Connect Signal Out to channel A and click OK.'</span>, <span class="string">'Connect Input Signal'</span>);
 uiwait(h);
-</pre><h2 id="11">Start signal generator</h2><p>Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 Volts.</p><pre class="codeinput">offsetVoltage   = 0; <span class="comment">% Offset in microvolts</span>
+</pre><h2 id="11">Start signal generator</h2><p>Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 volts.</p><pre class="codeinput">offsetVoltage   = 0; <span class="comment">% Offset in microvolts</span>
 pkToPk          = 3000000; <span class="comment">% Peak-to-peak amplitude in microvolts</span>
 waveType        = ps5000Enuminfo.enWaveType.PS5000_SINE; <span class="comment">% Type of Wave.</span>
 startFrequency  = 5; <span class="comment">% Hz</span>
@@ -435,7 +435,7 @@ fprintf('Variant: %s\n', variant);
 fprintf('Serial : %s\n\n', serial);
 
 %% Set channels
-% Set channel A to use DC coupling with an input range of ±2 V 
+% Set channel A to use DC coupling with an input range of ±2 volts 
 
 enabled         = PicoConstants.TRUE;
 dc              = PicoConstants.TRUE;
@@ -516,7 +516,7 @@ h = helpdlg('Connect Signal Out to channel A and click OK.', 'Connect Input Sign
 uiwait(h);
            
 %% Start signal generator
-% Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 Volts.
+% Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 volts.
 
 offsetVoltage   = 0; % Offset in microvolts
 pkToPk          = 3000000; % Peak-to-peak amplitude in microvolts
