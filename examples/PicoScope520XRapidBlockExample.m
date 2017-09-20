@@ -120,7 +120,7 @@ fprintf('Serial : %s\n\n', serial);
 channelCount = str2double(variant(2));
 
 %% Set channels
-% Set channel A to use DC coupling with an input range of +/-2 V 
+% Set channel A to use DC coupling with an input range of ±2 volts 
 
 channelSettings(1).enabled = PicoConstants.TRUE;
 channelSettings(1).dc      = PicoConstants.TRUE;

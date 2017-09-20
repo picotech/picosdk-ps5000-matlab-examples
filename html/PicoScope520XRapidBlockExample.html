@@ -149,7 +149,7 @@ Driver : 1.7.0.8
 Variant: 5204
 Serial : AY791/043
 
-</pre><h2 id="7">Set channels</h2><p>Set channel A to use DC coupling with an input range of +/-2 V</p><pre class="codeinput">channelSettings(1).enabled = PicoConstants.TRUE;
+</pre><h2 id="7">Set channels</h2><p>Set channel A to use DC coupling with an input range of &plusmn;2 volts</p><pre class="codeinput">channelSettings(1).enabled = PicoConstants.TRUE;
 channelSettings(1).dc      = PicoConstants.TRUE;
 channelSettings(1).range   = ps5000Enuminfo.enPS5000Range.PS5000_2V;
 
@@ -613,7 +613,7 @@ fprintf('Serial : %s\n\n', serial);
 channelCount = str2double(variant(2));
 
 %% Set channels
-% Set channel A to use DC coupling with an input range of +/-2 V 
+% Set channel A to use DC coupling with an input range of ±2 volts 
 
 channelSettings(1).enabled = PicoConstants.TRUE;
 channelSettings(1).dc      = PicoConstants.TRUE;
