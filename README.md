@@ -8,6 +8,7 @@ The examples are provided as MATLAB scripts and live scripts and demonstrate how
 
 - Block 
 - Rapid Block
+- Streaming
 
 Please note that these examples are not compatible with the PicoScope 5000A/B Series models - these are supported by the 
 [PicoScope 5000 Series - MATLAB Generic Instrument Driver](http://uk.mathworks.com/matlabcentral/fileexchange/42820-picoscope-5000-series-matlab-generic-instrument-driver).
