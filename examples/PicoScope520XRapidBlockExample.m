@@ -21,7 +21,7 @@
 % Type |PicoScope520XRapidBlockExample| at the MATLAB command prompt or run from the
 % MATLAB Editor.
 %
-% *Copyright* © 2016 - 2017 Pico Technology Ltd. See LICENSE file for terms.
+% *Copyright* © 2016-2017 Pico Technology Ltd. See LICENSE file for terms.
 
 %% Clear Command Window and Close All Figures
 
