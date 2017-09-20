@@ -1,6 +1,6 @@
 %% PicoScope 5203 and 5204 Oscilloscope Rapid Block Data Capture Example
-% This is a MATLAB script that demonstrates how to use the PS5000 API
-% library functions to capture a data using rapid block mode from a
+% This is a MATLAB script that demonstrates how to use the ps5000 API
+% library functions to capture data using rapid block mode from a
 % PicoScope 5203 or 5204 oscilloscope using the following approach:
 %
 % * Open a unit 
@@ -23,12 +23,12 @@
 %
 % *Copyright* © 2016-2017 Pico Technology Ltd. See LICENSE file for terms.
 
-%% Clear Command Window and Close All Figures
+%% Clear command window and close all figures
 
 clc;
 close all;
 
-%% Load Configuration Information
+%% Load configuration information
 
 PS5000Config;
 
@@ -40,7 +40,7 @@ channelB    = ps5000Enuminfo.enPS5000Channel.PS5000_CHANNEL_B;
 maxADCValue = 32512; % Maximum ADC count value
 oversample  = 1;
 
-%% Load Library File
+%% Load library file
 % Load the ps5000 shared library using the appropriate prototype file.
 
 archStr = computer('arch');
@@ -75,7 +75,7 @@ end
 % (Optional view library functions)
 % libfunctionsview('ps5000');
 
-%% Open Unit
+%% Open unit
 % Open connection to oscilloscope and obtain unique handle value for device. 
 
 disp('PicoScope 5203 and 5204 Rapid Block Example');
@@ -90,8 +90,8 @@ if(status.open > PicoStatus.PICO_OK)
     
 end
 
-%% Diplay Unit Information
-% Display Driver, Variant and Batch/Serial number information
+%% Diplay unit information
+% Display driver, variant and batch/serial number information
 
 infoLine = blanks(100);
 reqSize = length(infoLine);
@@ -119,7 +119,7 @@ fprintf('Serial : %s\n\n', serial);
 % Obtain number of channels
 channelCount = str2double(variant(2));
 
-%% Set Channels
+%% Set channels
 % Set channel A to use DC coupling with an input range of +/-2 V 
 
 channelSettings(1).enabled = PicoConstants.TRUE;
@@ -153,7 +153,7 @@ if(status.setChannelB ~= PicoStatus.PICO_OK)
     
 end
 
-%% Segment the Memory and Set the Number of Captures
+%% Segment the memory and set the number of captures
 % Divide the buffer memory of the device into segments and indicate the
 % number of captures to be obtained.
 
@@ -175,8 +175,8 @@ end
 
 [status.setnoofCaptures] = calllib('ps5000','ps5000SetNoOfCaptures', unitHandle, nCaptures);
 
-%% Verify Timebase and Maximum Number of Samples
-% Use the |ps5000aGetTimebase| function to query the driver as to the
+%% Verify timebase and maximum number of samples
+% Use the |ps5000aGetTimebase()| function to query the driver as to the
 % suitability of using a particular timebase index and the maximum number
 % of samples available in the segment selected.
 %
@@ -210,7 +210,7 @@ while (status.getTimebase == PicoStatus.PICO_INVALID_TIMEBASE)
     [status.getTimebase, timeIntervalNanoseconds, maxSamples]  = calllib('ps5000', 'ps5000GetTimebase', unitHandle, timebaseIndex, ...
         numSamples, timeIntervalNanoseconds, oversample, maxSamples, segmentIndex);
     
-    if(status.getTimebase == PicoStatus.PICO_OK)
+    if (status.getTimebase == PicoStatus.PICO_OK)
        
         break;
         
@@ -267,7 +267,7 @@ end
 
 numSamples = preTriggerSamples + postTriggerSamples;
 
-%% Set up Simple Trigger
+%% Set up simple trigger
 % Set a simple trigger on channel A - trigger when the signal rises through
 % 500 mV, with an auto timeout of 5 seconds.
 
@@ -280,7 +280,7 @@ autoTriggerMs   = 5000; % 5 second auto trigger
 [status.setSimpleTrigger]  = calllib('ps5000', 'ps5000SetSimpleTrigger', unitHandle, triggerEnabled, ...
     channelA, threshold, direction, delay, autoTriggerMs);
 
-%% Set up Data Buffers
+%% Set up data buffers
 % It can be more efficient to set up data buffers prior to data collection,
 % particularly for multiple data sets.
 
@@ -318,19 +318,19 @@ for ch = 1:channelCount
     
 end
 
-%% Prompt to Connect Signal Out to Channel A
+%% Prompt to connect signal out to channel A
 
 h = helpdlg('Connect Signal Out to channel A and click OK.', 'Connect Input Signal');
 uiwait(h);
 
-%% Start Signal Generator
-% Output a swept sine wave starting at 2 kHz with a peak to peak voltage of 3 Volts.
+%% Start signal generator
+% Output a swept sine wave starting at 2 kHz with a peak-to-peak voltage of 3 volts.
 % Stop frequency is 5 kHz, with an increment of 250 Hz and dwell time of
 % 0.01 seconds.
 
 offsetVoltage   = 0; % Offset in microvolts
 pkToPk          = 3000000; % Peak-to-peak amplitude in microvolts
-waveType        = ps5000Enuminfo.enWaveType.PS5000_SINE; % Type of Wave. 
+waveType        = ps5000Enuminfo.enWaveType.PS5000_SINE; % Type of wave. 
 startFrequency  = 2000; % Hz 
 stopFrequency   = 5000; % Hz Stop frequency must equal start frequency for constant waveform
 increment       = 250; % Increment in frequency for sweep mode.
@@ -355,7 +355,7 @@ if (status.setSigGenBuiltIn ~= PicoStatus.PICO_OK)
     
 end
 
-%% Collect Rapid Block Data
+%% Collect rapid block data
 % Start data collection and poll the driver until the device is ready.
 
 disp('Collecting data...');
@@ -380,7 +380,7 @@ while (ready == 0)
     
 end
 
-%% Retrieve Data Values
+%% Retrieve data values
 % Retrieve the data values for the waveforms from the device.
 
 fromSegmentIndex    = 0;
@@ -401,12 +401,13 @@ else
     
 end
 
-%% Convert Data to Millivolts
+%% Process Data
+% In this example, the data collected from the device will be converted to
+% millivolts and displayed on a plot.
+
+% Convert data to millivolts.
 % Use the |adc2mv| function from the
-% <https://uk.mathworks.com/matlabcentral/fileethe
-% <https://www.picotech.com/download/manuals/ps5000pg-en-1.pdf PicoScope
-% 5000 Series PC Oscilloscopes Programmer's
-% Guide>.xchange/53681-picoscope-support-toolbox PicoScope Support
+% <https://uk.mathworks.com/matlabcentral/fileexchange/53681-picoscope-support-toolbox PicoScope Support
 % Toolbox>.
 
 % Create empty arrays for channel data.
@@ -452,14 +453,11 @@ for ch = 1:channelCount
     
 end
 
-%% Process Data
-% In this example, the data collected from the device will be displayed on
-% a plot.
-%
 % Calculate time axis values (in nanoseconds) and convert to milliseconds.
-% Use timeIntervalNanoSeconds output from ps5000GetTimebase or calculate
-% using the <https://www.picotech.com/download/manuals/ps5000pg-en-1.pdf
-% PicoScope 5000 Series PC Oscilloscopes Programmer's Guide>.
+% Use |timeIntervalNanoSeconds| output from |ps5000GetTimebase()| or
+% calculate using the
+% <https://www.picotech.com/download/manuals/ps5000pg-en-1.pdf PicoScope
+% 5000 Series PC Oscilloscopes Programmer's Guide>.
 
 disp('Plotting data...');
 
@@ -491,11 +489,11 @@ grid(axes1, 'on');
 
 hold(axes1, 'off');
 
-%% Stop the Device
+%% Stop the device
 
 [status.stop] = calllib('ps5000', 'ps5000Stop', unitHandle);
 
-%% Close Unit
+%% Close unit
 
 [status.closeUnit] = calllib('ps5000','ps5000CloseUnit', unitHandle);
 
@@ -509,7 +507,7 @@ else
     
 end
 
-%% Unload Library Files
+%% Unload library files
 
 unloadlibrary('ps5000');
 
