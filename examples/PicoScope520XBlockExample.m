@@ -195,7 +195,7 @@ h = helpdlg('Connect Signal Out to channel A and click OK.', 'Connect Input Sign
 uiwait(h);
            
 %% Start signal generator
-% Output a sine wave at 5 Hz with a peak to peak voltage of 3 Volts.
+% Output a sine wave at 5 Hz with a peak-to-peak voltage of 3 Volts.
 
 offsetVoltage   = 0; % Offset in microvolts
 pkToPk          = 3000000; % Peak-to-peak amplitude in microvolts
