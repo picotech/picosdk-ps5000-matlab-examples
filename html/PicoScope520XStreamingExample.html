@@ -1,0 +1,1491 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>PicoScope 5203 and 5204 Oscilloscope Streaming Data Capture Example</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-09-21"><meta name="DC.source" content="PicoScope520XStreamingExample.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>PicoScope 5203 and 5204 Oscilloscope Streaming Data Capture Example</h1><!--introduction--><p>This is a MATLAB script that demonstrates how to use the ps5000 API library functions to capture data in streaming mode from a PicoScope 5203 or 5204 oscilloscope using the following approach:</p><div><ul><li>Open a unit</li><li>Display unit information</li><li>Set up an input channel</li><li>Verify the timebase index</li><li>Setup a trigger</li><li>Output a signal from the signal generator</li><li>Set data buffers for collection</li><li>Start data collection</li><li>Retrieve the data values and convert to millivolts</li><li>Plot data live if the User chooses to do so</li><li>Plot data at the end of the capture</li><li>Close the unit</li></ul></div><p><b>To run this example:</b></p><p>Type <tt>PicoScope520XStreamingExample</tt> at the MATLAB command prompt or run from the MATLAB Editor.</p><p><b>Copyright</b> &copy; 2017 Pico Technology Ltd. See LICENSE file for terms.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Clear command window and close all figures</a></li><li><a href="#2">Load configuration information</a></li><li><a href="#3">Parameters used throughout the script</a></li><li><a href="#4">Load library files</a></li><li><a href="#5">Open unit</a></li><li><a href="#6">Diplay unit information</a></li><li><a href="#7">Set channels</a></li><li><a href="#8">Set up simple trigger</a></li><li><a href="#9">Prompt to connect signal out to channel A</a></li><li><a href="#10">Start signal generator</a></li><li><a href="#11">Set data buffers</a></li><li><a href="#12">Start streaming and collect data</a></li><li><a href="#13">Stop the device</a></li><li><a href="#14">Find the number of samples.</a></li><li><a href="#15">Process data</a></li><li><a href="#16">Close unit</a></li><li><a href="#17">Unload library files</a></li></ul></div><h2 id="1">Clear command window and close all figures</h2><pre class="codeinput">clc;
+close <span class="string">all</span>;
+</pre><h2 id="2">Load configuration information</h2><pre class="codeinput">PS5000Config;
+</pre><h2 id="3">Parameters used throughout the script</h2><pre class="codeinput">channelA    = ps5000Enuminfo.enPS5000Channel.PS5000_CHANNEL_A;
+channelB    = ps5000Enuminfo.enPS5000Channel.PS5000_CHANNEL_B;
+
+maxADCValue = 32512; <span class="comment">% Maximum ADC count value</span>
+oversample  = 1;
+</pre><h2 id="4">Load library files</h2><p>Load the ps5000 and ps5000Wrap shared library files using the respective prototype files.</p><pre class="codeinput">archStr = computer(<span class="string">'arch'</span>);
+
+ps5000MFile = str2func(strcat(<span class="string">'ps5000MFile_'</span>, archStr));
+
+<span class="keyword">if</span> ~libisloaded(<span class="string">'ps5000'</span>)
+
+    <span class="keyword">if</span> ispc()
+
+        loadlibrary(<span class="string">'ps5000.dll'</span>, ps5000MFile);
+
+    <span class="keyword">elseif</span> ismac()
+
+        error(<span class="string">'PS5000StreamingExample:OSNotSupported'</span>, <span class="keyword">...</span>
+            <span class="string">'Mac OS X not supported, please contact Pico Technology Technical Support for further assistance.'</span>);
+
+    <span class="keyword">elseif</span> isunix()
+
+        loadlibrary(<span class="string">'libps5000.so'</span>, ps5000MFile, <span class="string">'alias'</span>, <span class="string">'ps5000'</span>);
+
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> ~libisloaded(<span class="string">'ps5000'</span>)
+
+        error(<span class="string">'PS5000StreamingExample:LibraryNotLoaded'</span>, <span class="string">'Library ps5000 or ps5000MFile not found'</span>);
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+ps5000WrapMFile = str2func(strcat(<span class="string">'ps5000WrapMFile_'</span>, archStr));
+
+<span class="keyword">if</span> ~libisloaded(<span class="string">'ps5000Wrap'</span>)
+
+    <span class="keyword">if</span> ispc()
+
+        loadlibrary(<span class="string">'ps5000Wrap.dll'</span>, ps5000WrapMFile);
+
+    <span class="keyword">elseif</span> ismac()
+
+        error(<span class="string">'PS5000StreamingExample:OSNotSupported'</span>, <span class="keyword">...</span>
+            <span class="string">'Mac OS X not supported, please contact Pico Technology Technical Support for further assistance.'</span>);
+
+    <span class="keyword">elseif</span> isunix()
+
+        loadlibrary(<span class="string">'libps5000Wrap.so'</span>, ps5000WrapMFile, <span class="string">'alias'</span>, <span class="string">'ps5000Wrap'</span>);
+
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> ~libisloaded(<span class="string">'ps5000Wrap'</span>)
+
+        error(<span class="string">'PS5000StreamingExample:LibraryNotLoaded'</span>, <span class="string">'Library ps5000Wrap or ps5000WrapMFile not found'</span>);
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="comment">% (Optional view library functions)</span>
+<span class="comment">% libfunctionsview('ps5000Wrap');</span>
+</pre><h2 id="5">Open unit</h2><p>Open connection to oscilloscope and obtain unique handle value for device.</p><pre class="codeinput">disp(<span class="string">'PicoScope 5203 and 5204 Streaming Example'</span>);
+
+unitHandle = 0;
+
+[status.open, unitHandle] = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000OpenUnit'</span>, unitHandle);
+
+<span class="keyword">if</span> (status.open &gt; PicoStatus.PICO_OK)
+
+    error(<span class="string">'PS5000StreamingExample:DeviceNotOpened'</span>, <span class="string">'Error opening device - status code %d \n'</span>, status.open);
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">PicoScope 5203 and 5204 Streaming Example
+</pre><h2 id="6">Diplay unit information</h2><p>Display driver, variant and batch/serial number information</p><pre class="codeinput">infoLine = blanks(100);
+reqSize = length(infoLine);
+
+<span class="comment">% Obtain driver version</span>
+[status.infoDriver, driver]  = calllib(<span class="string">'ps5000'</span>, <span class="keyword">...</span>
+            <span class="string">'ps5000GetUnitInfo'</span>, unitHandle, infoLine, <span class="keyword">...</span>
+            length(infoLine), reqSize, PicoStatus.PICO_DRIVER_VERSION);
+
+<span class="comment">% Obtain variant information</span>
+[status.infoVariant, variant]  = calllib(<span class="string">'ps5000'</span>, <span class="keyword">...</span>
+            <span class="string">'ps5000GetUnitInfo'</span>, unitHandle, infoLine, <span class="keyword">...</span>
+            length(infoLine), reqSize, PicoStatus.PICO_VARIANT_INFO);
+
+<span class="comment">% Obtain batch/serial information</span>
+[status.infoVariant, serial]  = calllib(<span class="string">'ps5000'</span>, <span class="keyword">...</span>
+            <span class="string">'ps5000GetUnitInfo'</span>, unitHandle, infoLine, <span class="keyword">...</span>
+            length(infoLine), reqSize, PicoStatus.PICO_BATCH_AND_SERIAL);
+
+fprintf(<span class="string">'\nUnit information:\n\n'</span>);
+fprintf(<span class="string">'Driver : %s\n'</span>, driver);
+fprintf(<span class="string">'Variant: %s\n'</span>, variant);
+fprintf(<span class="string">'Serial : %s\n\n'</span>, serial);
+
+<span class="comment">% Obtain number of channels</span>
+channelCount = str2double(variant(2));
+</pre><pre class="codeoutput">
+Unit information:
+
+Driver : 1.7.0.8
+Variant: 5204
+Serial : AY791/043
+
+</pre><h2 id="7">Set channels</h2><p>Set channel A to use DC coupling with an input range of &plusmn;2 volts</p><pre class="codeinput">channelSettings(1).enabled = PicoConstants.TRUE;
+channelSettings(1).dc      = PicoConstants.TRUE;
+channelSettings(1).range   = ps5000Enuminfo.enPS5000Range.PS5000_2V;
+
+channelARangeMv = PicoConstants.SCOPE_INPUT_RANGES(channelSettings(1).range + 1); <span class="comment">% Used later in the script</span>
+
+[status.setChannelA]  = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000SetChannel'</span>, unitHandle, channelA, channelSettings(1).enabled, <span class="keyword">...</span>
+    channelSettings(1).dc, channelSettings(1).range);
+
+<span class="keyword">if</span> (status.setChannelA ~= PicoStatus.PICO_OK)
+
+    error(<span class="string">'PS5000StreamingExample:ChannelNotSet'</span>,<span class="string">'ps5000SetChannel (A) - status code %d \n'</span>, status.setChannelA);
+
+<span class="keyword">end</span>
+
+<span class="comment">% Turn off channel B</span>
+channelSettings(2).enabled = PicoConstants.FALSE;
+channelSettings(2).dc      = PicoConstants.TRUE;
+channelSettings(2).range   = ps5000Enuminfo.enPS5000Range.PS5000_2V;
+
+channelBRangeMv = PicoConstants.SCOPE_INPUT_RANGES(channelSettings(2).range + 1); <span class="comment">% Used later in the script</span>
+
+[status.setChannelB]  = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000SetChannel'</span>, unitHandle, channelB, channelSettings(2).enabled, <span class="keyword">...</span>
+    channelSettings(2).dc, channelSettings(2).range);
+
+<span class="keyword">if</span>(status.setChannelB ~= PicoStatus.PICO_OK)
+
+    error(<span class="string">'PS5000StreamingExample:ChannelNotSet'</span>, <span class="string">'ps5000SetChannel (B) - status code %d \n'</span>, status.setChannelB);
+
+<span class="keyword">end</span>
+
+<span class="comment">% Set the number of enabled channels with the wrapper library</span>
+enabledChannels = zeros(PicoConstants.DUAL_SCOPE, 1, <span class="string">'int16'</span>);
+
+enabledChannels(1) = channelSettings(1).enabled;
+enabledChannels(2) = channelSettings(2).enabled;
+
+status.setEnabledChannels = calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'setEnabledChannels'</span>, unitHandle, enabledChannels);
+</pre><h2 id="8">Set up simple trigger</h2><p>Set a simple trigger on channel A - trigger when the signal rises through 500 mV, with an auto timeout of 5 seconds.</p><pre class="codeinput">triggerEnabled  = PicoConstants.TRUE;
+threshold       = mv2adc(500, channelARangeMv, maxADCValue);
+direction       = ps5000Enuminfo.enThresholdDirection.RISING;
+delay           = 0;
+autoTriggerMs   = 5000; <span class="comment">% 5 second auto trigger</span>
+
+[status.setSimpleTrigger] = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000SetSimpleTrigger'</span>, unitHandle, triggerEnabled, <span class="keyword">...</span>
+                                channelA, threshold, direction, delay, autoTriggerMs);
+</pre><h2 id="9">Prompt to connect signal out to channel A</h2><pre class="codeinput">h = helpdlg(<span class="string">'Connect Signal Out to channel A and click OK.'</span>, <span class="string">'Connect Input Signal'</span>);
+uiwait(h);
+</pre><h2 id="10">Start signal generator</h2><p>Output a sine wave at 1 Hz with a peak-to-peak voltage of 4 volts.</p><pre class="codeinput">offsetVoltage   = 0; <span class="comment">% Offset in microvolts</span>
+pkToPk          = 4000000; <span class="comment">% Peak-to-peak amplitude in microvolts</span>
+waveType        = ps5000Enuminfo.enWaveType.PS5000_SINE; <span class="comment">% Type of Wave.</span>
+startFrequency  = 1; <span class="comment">% Hz</span>
+stopFrequency   = 1; <span class="comment">% Hz Stop frequency must equal start frequency for constant waveform</span>
+increment       = 0; <span class="comment">% Increment in frequency for sweep mode.</span>
+dwellTime       = 0; <span class="comment">% Time (sec) spent in each frequency for sweep mode.</span>
+sweepType       = ps5000Enuminfo.enSweepType.UP; <span class="comment">% Type of sweep.</span>
+whiteNoise      = PicoConstants.FALSE;
+shots           = 0;
+sweeps          = 0;
+triggerType     = ps5000Enuminfo.enSigGenTrigType.SIGGEN_RISING;
+triggerSource   = ps5000Enuminfo.enSigGenTrigSource.SIGGEN_NONE;
+extInThreshold  = 0;
+
+disp(<span class="string">'Starting signal generator...'</span>);
+
+status.setSigGenBuiltIn = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000SetSigGenBuiltIn'</span>, unitHandle, <span class="keyword">...</span>
+                            offsetVoltage, pkToPk, waveType, startFrequency, stopFrequency, increment, dwellTime,<span class="keyword">...</span>
+                            sweepType, whiteNoise, shots, sweeps, triggerType, triggerSource, extInThreshold);
+</pre><pre class="codeoutput">Starting signal generator...
+</pre><h2 id="11">Set data buffers</h2><p>Data buffers for channel A - buffers should be set with the driver, and these MUST be passed with application buffers to the wrapper library in order to ensure data is correctly copied.</p><pre class="codeinput">sampleCount =  100000; <span class="comment">% Size of the buffer to collect data from buffer.</span>
+
+ratioMode = ps5000Enuminfo.enRatioMode.RATIO_MODE_NONE;
+
+<span class="comment">% Buffers to be passed to the driver</span>
+pDriverBufferChA = libpointer(<span class="string">'int16Ptr'</span>, zeros(sampleCount, 1, <span class="string">'int16'</span>));
+
+status.setDataBufferChA = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000SetDataBuffer'</span>, unitHandle, channelA, pDriverBufferChA, sampleCount);
+
+<span class="comment">% Application Buffers - these are for copying from the driver into.</span>
+pAppBufferChA = libpointer(<span class="string">'int16Ptr'</span>, zeros(sampleCount, 1, <span class="string">'int16'</span>));
+
+status.setAppDriverBuffersA = calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'setAppAndDriverBuffers'</span>, unitHandle, channelA, <span class="keyword">...</span>
+                                pAppBufferChA, pDriverBufferChA, sampleCount);
+</pre><h2 id="12">Start streaming and collect data</h2><p>Collect data for 5 seconds after a trigger event, including any pre-trigger data - maximum array size will depend on the PC's resources - type <a href="matlab:doc('memory')"><tt>memory</tt></a> at the MATLAB command prompt for further information.</p><pre class="codeinput"><span class="comment">% Define the sampling interval - this will be modified by the driver if the</span>
+<span class="comment">% requested sampling interval is not supported</span>
+
+sampleInterval          = 1;
+sampleIntervalTimeUnits = ps5000Enuminfo.enPS5000TimeUnits.PS5000_US;
+
+<span class="comment">% Set the number of pre- and post-trigger samples to collect. Note that in</span>
+<span class="comment">% streaming mode, the device will begin returning data regardless of</span>
+<span class="comment">% whether a trigger is set or not.</span>
+numPreTriggerSamples    = 0;
+numPostTriggerSamples   = 5000000;
+
+<span class="comment">% Set other streaming parameters</span>
+autoStop            = PicoConstants.TRUE;
+downSampleRatio     = 1;
+overviewBufferSize  = sampleCount;
+
+<span class="comment">% Define buffers to store data collected from the channels. If capturing</span>
+<span class="comment">% data without using the autoStop flag, or if using a trigger with the</span>
+<span class="comment">% autoStop flag, allocate sufficient space (1.5 times the sum of the number of</span>
+<span class="comment">% pre-trigger and post-trigger samples is shown below) to allow for</span>
+<span class="comment">% additional pre-trigger data. Pre-allocating the array is more efficient</span>
+<span class="comment">% than using &lt;matlab:doc('vertcat') |vertcat|&gt; to combine data.</span>
+
+maxSamples = numPreTriggerSamples + numPostTriggerSamples;
+
+<span class="comment">% Take into account the downSampleRatio</span>
+finalBufferLength = round(1.5 * maxSamples / downSampleRatio);
+
+<span class="comment">% Prompt User to indicate if they wish to plot live streaming data.</span>
+plotLiveData = questionDialog(<span class="string">'Plot live streaming data?'</span>, <span class="string">'Streaming Data Plot'</span>);
+
+<span class="keyword">if</span> (plotLiveData == PicoConstants.TRUE)
+
+    disp(<span class="string">'Live streaming data collection with second plot on completion.'</span>);
+
+<span class="keyword">else</span>
+
+    disp(<span class="string">'Streaming data plot on completion.'</span>);
+
+<span class="keyword">end</span>
+
+[status.runStreaming, actualSampleInterval] = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000RunStreaming'</span>, unitHandle, <span class="keyword">...</span>
+                                                sampleInterval, sampleIntervalTimeUnits, numPreTriggerSamples, numPostTriggerSamples, <span class="keyword">...</span>
+                                                autoStop, downSampleRatio, overviewBufferSize);
+
+disp(<span class="string">'Streaming data...'</span>);
+fprintf(<span class="string">'Click the STOP button to stop capture or wait for auto stop if enabled.\n\n'</span>)
+
+<span class="comment">% Variables to be used when collecting the data:</span>
+
+hasAutoStopOccurred = PicoConstants.FALSE;  <span class="comment">% Indicates if the device has stopped automatically.</span>
+newSamples          = 0;                    <span class="comment">% Number of new samples returned from the driver.</span>
+previousTotal       = 0;                    <span class="comment">% The previous total number of samples.</span>
+totalSamples        = 0;                    <span class="comment">% Total samples captured by the device.</span>
+startIndex          = 0;                    <span class="comment">% Start index of data in the buffer returned.</span>
+hasTriggered        = 0;                    <span class="comment">% To indicate if trigger has occurred.</span>
+triggeredAtIndex    = 0;                    <span class="comment">% The index in the overall buffer where the trigger occurred.</span>
+
+<span class="comment">% Libpointer objects for streaming data parameters</span>
+
+pOverflow   = libpointer(<span class="string">'int16Ptr'</span>, 0);
+pTrigAt     = libpointer(<span class="string">'uint32Ptr'</span>, 0);
+pAutoStop   = libpointer(<span class="string">'int16Ptr'</span>, 0);
+pStartIndex = libpointer(<span class="string">'uint32Ptr'</span>, 0);
+
+status.getStreamingLatestValues = PicoStatus.PICO_OK; <span class="comment">% OK</span>
+
+<span class="comment">% Display a 'Stop' button.</span>
+[stopFig.h, stopFig.h] = stopButton();
+
+flag = 1; <span class="comment">% Use flag variable to indicate if stop button has been clicked (0)</span>
+setappdata(gcf, <span class="string">'run'</span>, flag);
+
+<span class="comment">% Plot Properties - these are for displaying data as it is collected.</span>
+
+<span class="comment">% Set x-axis for both live and post-capture plots according to the time</span>
+<span class="comment">% units specified..</span>
+
+<span class="keyword">switch</span> (sampleIntervalTimeUnits)
+
+    <span class="keyword">case</span> ps5000Enuminfo.enPS5000TimeUnits.PS5000_FS
+
+        xLabelStr  = <span class="string">'Time (fs)'</span>;
+
+    <span class="keyword">case</span> ps5000Enuminfo.enPS5000TimeUnits.PS5000_PS
+
+        xLabelStr = <span class="string">'Time (ps)'</span>;
+
+    <span class="keyword">case</span> ps5000Enuminfo.enPS5000TimeUnits.PS5000_NS
+
+        xLabelStr = <span class="string">'Time (ns)'</span>;
+
+    <span class="keyword">case</span> ps5000Enuminfo.enPS5000TimeUnits.PS5000_US
+
+        xLabelStr = <span class="string">'Time (\mus)'</span>;
+
+    <span class="keyword">case</span> ps5000Enuminfo.enPS5000TimeUnits.PS5000_MS
+
+        xLabelStr = <span class="string">'Time (ms)'</span>;
+
+    <span class="keyword">case</span> ps5000Enuminfo.enPS5000TimeUnits.PS5000_S
+
+        xLabelStr = <span class="string">'Time (s)'</span>;
+
+    <span class="keyword">otherwise</span>
+
+        xLabelStr = <span class="string">'Time'</span>;
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> (plotLiveData == PicoConstants.TRUE)
+
+    <span class="comment">% Plot on a single figure</span>
+    figure1 = figure(<span class="string">'Name'</span>,<span class="string">'PicoScope 5203 and 5204 Example - Streaming Mode Capture'</span>, <span class="keyword">...</span>
+         <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>);
+
+     axes1 = axes(<span class="string">'Parent'</span>, figure1);
+
+    <span class="comment">% Estimate x-axis limit to try and avoid using too much CPU resources</span>
+    <span class="comment">% when drawing - use max voltage range selected if plotting multiple</span>
+    <span class="comment">% channels on the same graph.</span>
+
+    xlim(axes1, [0 (actualSampleInterval * finalBufferLength)]);
+
+    yRange = channelARangeMv + 500;
+    ylim(axes1,[(-1 * yRange) yRange]);
+
+    hold(axes1,<span class="string">'on'</span>);
+    grid(axes1, <span class="string">'on'</span>);
+
+    title(axes1, <span class="string">'Live Streaming Data Capture'</span>);
+
+    xlabel(axes1, xLabelStr);
+    ylabel(axes1, <span class="string">'Voltage (mV)'</span>);
+
+<span class="keyword">end</span>
+
+<span class="comment">% Collect samples as long as the |hasAutoStopOccurred| flag has not been</span>
+<span class="comment">% set or the call to |getStreamingLatestValues()| does not return an error</span>
+<span class="comment">% code (check for STOP button push inside loop).</span>
+<span class="keyword">while</span> (hasAutoStopOccurred == PicoConstants.FALSE &amp;&amp; status.getStreamingLatestValues == PicoStatus.PICO_OK)
+
+    ready = PicoConstants.FALSE;
+
+    <span class="keyword">while</span> (ready == PicoConstants.FALSE)
+
+        status.getStreamingLatestValues = calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'GetStreamingLatestValues'</span>, unitHandle);
+
+        ready = calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'IsReady'</span>, unitHandle);
+
+       <span class="comment">% Give option to abort from here.</span>
+       flag = getappdata(gcf, <span class="string">'run'</span>);
+       drawnow;
+
+       <span class="keyword">if</span> (flag == 0)
+
+           disp(<span class="string">'STOP button clicked - aborting data collection.'</span>)
+           <span class="keyword">break</span>;
+
+       <span class="keyword">end</span>
+
+       drawnow;
+
+    <span class="keyword">end</span>
+
+    <span class="comment">% Check for new data values.</span>
+    newSamples =  calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'AvailableData'</span>, unitHandle, pStartIndex);
+
+    <span class="keyword">if</span> (newSamples &gt; 0)
+
+        <span class="comment">% Check if the scope has triggered.</span>
+        triggered = calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'IsTriggerReady'</span>, unitHandle, pTrigAt);
+
+        <span class="keyword">if</span> (triggered == PicoConstants.TRUE)
+
+            hasTriggered    = PicoConstants.TRUE;
+            triggeredAt     = pTrigAt.Value;
+
+            <span class="comment">% Adjust trigger position as MATLAB does not use zero-based</span>
+            <span class="comment">% indexing.</span>
+            bufferTriggerPosition = triggeredAt + 1;
+
+            fprintf(<span class="string">'Triggered - index in buffer: %d\n'</span>, bufferTriggerPosition);
+
+            hasTriggered = triggered;
+
+            <span class="comment">% Set the total number of samples at which the device</span>
+            <span class="comment">% triggered.</span>
+            triggeredAtIndex = totalSamples + bufferTriggerPosition;
+
+        <span class="keyword">end</span>
+
+        <span class="comment">% Position index of data in the buffer(s).</span>
+        startIndex      = pStartIndex.Value;
+
+        previousTotal   = totalSamples;
+        totalSamples    = totalSamples + newSamples;
+
+        <span class="comment">% Printing to console can slow down acquisition - use for</span>
+        <span class="comment">% demonstration.</span>
+        fprintf(<span class="string">'Collected %d samples, start index: %d, total: %d.\n'</span>, newSamples, startIndex, totalSamples);
+
+        firstValuePosn  = startIndex + 1;
+        lastValuePosn   = startIndex + newSamples;
+
+        <span class="comment">% Convert data values to millivolts from the application buffer(s).</span>
+        bufferChAmV = adc2mv(pAppBufferChA.Value(firstValuePosn:lastValuePosn), channelARangeMv, maxADCValue);
+
+        <span class="comment">% Process collected data further if required - this example plots</span>
+        <span class="comment">% the data if the User has selected 'Yes' at the prompt.</span>
+
+        <span class="comment">% Copy data into the final buffer(s).</span>
+        pBufferChAFinal.Value((previousTotal + 1):totalSamples) = bufferChAmV;
+
+        <span class="keyword">if</span> (plotLiveData == PicoConstants.TRUE)
+
+            <span class="comment">% Time axis</span>
+            <span class="comment">% Multiply by ratio mode as samples get reduced.</span>
+            time = (double(actualSampleInterval) * double(downSampleRatio)) * (previousTotal:(totalSamples - 1));
+
+            plot(time, bufferChAmV);
+
+        <span class="keyword">end</span>
+
+        <span class="comment">% Clear variables for use again.</span>
+        clear <span class="string">bufferChAmV</span>;
+        clear <span class="string">firstValuePosn</span>;
+        clear <span class="string">lastValuePosn</span>;
+        clear <span class="string">startIndex</span>;
+        clear <span class="string">triggered</span>;
+        clear <span class="string">triggerAt</span>;
+
+    <span class="keyword">end</span>
+
+    <span class="comment">% Check if auto stop has occurred.</span>
+    hasAutoStopOccurred = calllib(<span class="string">'ps5000Wrap'</span>, <span class="string">'AutoStopped'</span>, unitHandle);
+
+    <span class="keyword">if</span> (hasAutoStopOccurred == PicoConstants.TRUE)
+
+       disp(<span class="string">'AutoStop: TRUE - exiting loop.'</span>);
+       <span class="keyword">break</span>;
+
+    <span class="keyword">end</span>
+
+    <span class="comment">% Check if 'STOP' button pressed</span>
+    flag = getappdata(gcf, <span class="string">'run'</span>);
+    drawnow;
+
+    <span class="keyword">if</span> (flag == 0)
+
+        disp(<span class="string">'STOP button clicked - aborting data collection.'</span>)
+        <span class="keyword">break</span>;
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="comment">% Close the STOP button window.</span>
+<span class="keyword">if</span> (exist(<span class="string">'stopFig'</span>, <span class="string">'var'</span>))
+
+    close(<span class="string">'Stop Button'</span>);
+    clear <span class="string">stopFig</span>;
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> (plotLiveData == PicoConstants.TRUE)
+
+    drawnow;
+
+    <span class="comment">% Take hold off the current figure.</span>
+    hold(axes1, <span class="string">'off'</span>);
+    movegui(figure1, <span class="string">'west'</span>);
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> (hasTriggered == PicoConstants.TRUE)
+
+    fprintf(<span class="string">'Triggered at overall index: %d\n'</span>, triggeredAtIndex);
+
+<span class="keyword">end</span>
+
+fprintf(<span class="string">'\n'</span>);
+</pre><pre class="codeoutput">Streaming data plot on completion.
+Streaming data...
+Click the STOP button to stop capture or wait for auto stop if enabled.
+
+Collected 32689 samples, start index: 0, total: 32689.
+Collected 32768 samples, start index: 32689, total: 65457.
+Collected 32768 samples, start index: 65457, total: 98225.
+Collected 1775 samples, start index: 98225, total: 100000.
+Collected 30993 samples, start index: 0, total: 130993.
+Collected 32768 samples, start index: 30993, total: 163761.
+Triggered - index in buffer: 1878
+Collected 32760 samples, start index: 63761, total: 196521.
+Collected 3479 samples, start index: 96521, total: 200000.
+Collected 29289 samples, start index: 0, total: 229289.
+Collected 32768 samples, start index: 29289, total: 262057.
+Collected 32768 samples, start index: 62057, total: 294825.
+Collected 5175 samples, start index: 94825, total: 300000.
+Collected 27593 samples, start index: 0, total: 327593.
+Collected 32768 samples, start index: 27593, total: 360361.
+Collected 32768 samples, start index: 60361, total: 393129.
+Collected 6871 samples, start index: 93129, total: 400000.
+Collected 25897 samples, start index: 0, total: 425897.
+Collected 32768 samples, start index: 25897, total: 458665.
+Collected 32768 samples, start index: 58665, total: 491433.
+Collected 8567 samples, start index: 91433, total: 500000.
+Collected 24201 samples, start index: 0, total: 524201.
+Collected 32768 samples, start index: 24201, total: 556969.
+Collected 32768 samples, start index: 56969, total: 589737.
+Collected 10263 samples, start index: 89737, total: 600000.
+Collected 22505 samples, start index: 0, total: 622505.
+Collected 32768 samples, start index: 22505, total: 655273.
+Collected 32768 samples, start index: 55273, total: 688041.
+Collected 11959 samples, start index: 88041, total: 700000.
+Collected 20809 samples, start index: 0, total: 720809.
+Collected 32768 samples, start index: 20809, total: 753577.
+Collected 32768 samples, start index: 53577, total: 786345.
+Collected 13655 samples, start index: 86345, total: 800000.
+Collected 19113 samples, start index: 0, total: 819113.
+Collected 32768 samples, start index: 19113, total: 851881.
+Collected 32768 samples, start index: 51881, total: 884649.
+Collected 15351 samples, start index: 84649, total: 900000.
+Collected 17417 samples, start index: 0, total: 917417.
+Collected 32768 samples, start index: 17417, total: 950185.
+Collected 32768 samples, start index: 50185, total: 982953.
+Collected 17047 samples, start index: 82953, total: 1000000.
+Collected 15721 samples, start index: 0, total: 1015721.
+Collected 32768 samples, start index: 15721, total: 1048489.
+Collected 32768 samples, start index: 48489, total: 1081257.
+Collected 18743 samples, start index: 81257, total: 1100000.
+Collected 14025 samples, start index: 0, total: 1114025.
+Collected 32768 samples, start index: 14025, total: 1146793.
+Collected 32768 samples, start index: 46793, total: 1179561.
+Collected 20439 samples, start index: 79561, total: 1200000.
+Collected 12329 samples, start index: 0, total: 1212329.
+Collected 32768 samples, start index: 12329, total: 1245097.
+Collected 32768 samples, start index: 45097, total: 1277865.
+Collected 22135 samples, start index: 77865, total: 1300000.
+Collected 10633 samples, start index: 0, total: 1310633.
+Collected 32768 samples, start index: 10633, total: 1343401.
+Collected 32768 samples, start index: 43401, total: 1376169.
+Collected 23831 samples, start index: 76169, total: 1400000.
+Collected 8937 samples, start index: 0, total: 1408937.
+Collected 32768 samples, start index: 8937, total: 1441705.
+Collected 32768 samples, start index: 41705, total: 1474473.
+Collected 25527 samples, start index: 74473, total: 1500000.
+Collected 7241 samples, start index: 0, total: 1507241.
+Collected 32768 samples, start index: 7241, total: 1540009.
+Collected 32768 samples, start index: 40009, total: 1572777.
+Collected 27223 samples, start index: 72777, total: 1600000.
+Collected 5545 samples, start index: 0, total: 1605545.
+Collected 32768 samples, start index: 5545, total: 1638313.
+Collected 32768 samples, start index: 38313, total: 1671081.
+Collected 28919 samples, start index: 71081, total: 1700000.
+Collected 3849 samples, start index: 0, total: 1703849.
+Collected 32768 samples, start index: 3849, total: 1736617.
+Collected 32768 samples, start index: 36617, total: 1769385.
+Collected 30615 samples, start index: 69385, total: 1800000.
+Collected 2153 samples, start index: 0, total: 1802153.
+Collected 32768 samples, start index: 2153, total: 1834921.
+Collected 32768 samples, start index: 34921, total: 1867689.
+Collected 32311 samples, start index: 67689, total: 1900000.
+Collected 457 samples, start index: 0, total: 1900457.
+Collected 32768 samples, start index: 457, total: 1933225.
+Collected 32768 samples, start index: 33225, total: 1965993.
+Collected 32768 samples, start index: 65993, total: 1998761.
+Collected 1239 samples, start index: 98761, total: 2000000.
+Collected 31529 samples, start index: 0, total: 2031529.
+Collected 32768 samples, start index: 31529, total: 2064297.
+Collected 32768 samples, start index: 64297, total: 2097065.
+Collected 2935 samples, start index: 97065, total: 2100000.
+Collected 29833 samples, start index: 0, total: 2129833.
+Collected 32768 samples, start index: 29833, total: 2162601.
+Collected 32768 samples, start index: 62601, total: 2195369.
+Collected 4631 samples, start index: 95369, total: 2200000.
+Collected 28137 samples, start index: 0, total: 2228137.
+Collected 32768 samples, start index: 28137, total: 2260905.
+Collected 32768 samples, start index: 60905, total: 2293673.
+Collected 6327 samples, start index: 93673, total: 2300000.
+Collected 26441 samples, start index: 0, total: 2326441.
+Collected 32768 samples, start index: 26441, total: 2359209.
+Collected 32768 samples, start index: 59209, total: 2391977.
+Collected 8023 samples, start index: 91977, total: 2400000.
+Collected 24745 samples, start index: 0, total: 2424745.
+Collected 32768 samples, start index: 24745, total: 2457513.
+Collected 32768 samples, start index: 57513, total: 2490281.
+Collected 9719 samples, start index: 90281, total: 2500000.
+Collected 23049 samples, start index: 0, total: 2523049.
+Collected 32768 samples, start index: 23049, total: 2555817.
+Collected 32768 samples, start index: 55817, total: 2588585.
+Collected 11415 samples, start index: 88585, total: 2600000.
+Collected 21353 samples, start index: 0, total: 2621353.
+Collected 32768 samples, start index: 21353, total: 2654121.
+Collected 32768 samples, start index: 54121, total: 2686889.
+Collected 13111 samples, start index: 86889, total: 2700000.
+Collected 19657 samples, start index: 0, total: 2719657.
+Collected 32768 samples, start index: 19657, total: 2752425.
+Collected 32768 samples, start index: 52425, total: 2785193.
+Collected 14807 samples, start index: 85193, total: 2800000.
+Collected 17961 samples, start index: 0, total: 2817961.
+Collected 32768 samples, start index: 17961, total: 2850729.
+Collected 32768 samples, start index: 50729, total: 2883497.
+Collected 16503 samples, start index: 83497, total: 2900000.
+Collected 16265 samples, start index: 0, total: 2916265.
+Collected 32768 samples, start index: 16265, total: 2949033.
+Collected 32768 samples, start index: 49033, total: 2981801.
+Collected 18199 samples, start index: 81801, total: 3000000.
+Collected 14569 samples, start index: 0, total: 3014569.
+Collected 32768 samples, start index: 14569, total: 3047337.
+Collected 32768 samples, start index: 47337, total: 3080105.
+Collected 19895 samples, start index: 80105, total: 3100000.
+Collected 12873 samples, start index: 0, total: 3112873.
+Collected 32768 samples, start index: 12873, total: 3145641.
+Collected 32768 samples, start index: 45641, total: 3178409.
+Collected 21591 samples, start index: 78409, total: 3200000.
+Collected 11177 samples, start index: 0, total: 3211177.
+Collected 32768 samples, start index: 11177, total: 3243945.
+Collected 32768 samples, start index: 43945, total: 3276713.
+Collected 23287 samples, start index: 76713, total: 3300000.
+Collected 9481 samples, start index: 0, total: 3309481.
+Collected 32768 samples, start index: 9481, total: 3342249.
+Collected 32768 samples, start index: 42249, total: 3375017.
+Collected 24983 samples, start index: 75017, total: 3400000.
+Collected 7785 samples, start index: 0, total: 3407785.
+Collected 32768 samples, start index: 7785, total: 3440553.
+Collected 32768 samples, start index: 40553, total: 3473321.
+Collected 26679 samples, start index: 73321, total: 3500000.
+Collected 6089 samples, start index: 0, total: 3506089.
+Collected 32768 samples, start index: 6089, total: 3538857.
+Collected 32768 samples, start index: 38857, total: 3571625.
+Collected 28375 samples, start index: 71625, total: 3600000.
+Collected 4393 samples, start index: 0, total: 3604393.
+Collected 32768 samples, start index: 4393, total: 3637161.
+Collected 32768 samples, start index: 37161, total: 3669929.
+Collected 30071 samples, start index: 69929, total: 3700000.
+Collected 2697 samples, start index: 0, total: 3702697.
+Collected 32768 samples, start index: 2697, total: 3735465.
+Collected 32768 samples, start index: 35465, total: 3768233.
+Collected 31767 samples, start index: 68233, total: 3800000.
+Collected 1001 samples, start index: 0, total: 3801001.
+Collected 32768 samples, start index: 1001, total: 3833769.
+Collected 32768 samples, start index: 33769, total: 3866537.
+Collected 32768 samples, start index: 66537, total: 3899305.
+Collected 695 samples, start index: 99305, total: 3900000.
+Collected 32073 samples, start index: 0, total: 3932073.
+Collected 32768 samples, start index: 32073, total: 3964841.
+Collected 32768 samples, start index: 64841, total: 3997609.
+Collected 2391 samples, start index: 97609, total: 4000000.
+Collected 30377 samples, start index: 0, total: 4030377.
+Collected 32768 samples, start index: 30377, total: 4063145.
+Collected 32768 samples, start index: 63145, total: 4095913.
+Collected 4087 samples, start index: 95913, total: 4100000.
+Collected 28681 samples, start index: 0, total: 4128681.
+Collected 32768 samples, start index: 28681, total: 4161449.
+Collected 32768 samples, start index: 61449, total: 4194217.
+Collected 5783 samples, start index: 94217, total: 4200000.
+Collected 26985 samples, start index: 0, total: 4226985.
+Collected 32768 samples, start index: 26985, total: 4259753.
+Collected 32768 samples, start index: 59753, total: 4292521.
+Collected 7479 samples, start index: 92521, total: 4300000.
+Collected 25289 samples, start index: 0, total: 4325289.
+Collected 32768 samples, start index: 25289, total: 4358057.
+Collected 32768 samples, start index: 58057, total: 4390825.
+Collected 9175 samples, start index: 90825, total: 4400000.
+Collected 23593 samples, start index: 0, total: 4423593.
+Collected 32768 samples, start index: 23593, total: 4456361.
+Collected 32768 samples, start index: 56361, total: 4489129.
+Collected 10871 samples, start index: 89129, total: 4500000.
+Collected 21897 samples, start index: 0, total: 4521897.
+Collected 32768 samples, start index: 21897, total: 4554665.
+Collected 32768 samples, start index: 54665, total: 4587433.
+Collected 12567 samples, start index: 87433, total: 4600000.
+Collected 20201 samples, start index: 0, total: 4620201.
+Collected 32768 samples, start index: 20201, total: 4652969.
+Collected 32768 samples, start index: 52969, total: 4685737.
+Collected 14263 samples, start index: 85737, total: 4700000.
+Collected 18505 samples, start index: 0, total: 4718505.
+Collected 32768 samples, start index: 18505, total: 4751273.
+Collected 32768 samples, start index: 51273, total: 4784041.
+Collected 15959 samples, start index: 84041, total: 4800000.
+Collected 16809 samples, start index: 0, total: 4816809.
+Collected 32768 samples, start index: 16809, total: 4849577.
+Collected 32768 samples, start index: 49577, total: 4882345.
+Collected 17655 samples, start index: 82345, total: 4900000.
+Collected 15113 samples, start index: 0, total: 4915113.
+Collected 32768 samples, start index: 15113, total: 4947881.
+Collected 32768 samples, start index: 47881, total: 4980649.
+Collected 19351 samples, start index: 80649, total: 5000000.
+Collected 13417 samples, start index: 0, total: 5013417.
+Collected 32768 samples, start index: 13417, total: 5046185.
+Collected 32768 samples, start index: 46185, total: 5078953.
+Collected 21047 samples, start index: 78953, total: 5100000.
+Collected 11721 samples, start index: 0, total: 5111721.
+Collected 32768 samples, start index: 11721, total: 5144489.
+Collected 21151 samples, start index: 44489, total: 5165640.
+AutoStop: TRUE - exiting loop.
+Triggered at overall index: 165639
+
+</pre><h2 id="13">Stop the device</h2><pre class="codeinput">[status.stop] = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000Stop'</span>, unitHandle);
+</pre><h2 id="14">Find the number of samples.</h2><p>This is the number of samples held in the driver itself. The actual number of samples collected when using a trigger is likely to be greater. In this example, the total number of samples collected will be used.</p><pre class="codeinput">pNumStreamingValues         = libpointer(<span class="string">'uint32Ptr'</span>, 0);
+
+status.numStreamingValues   = calllib(<span class="string">'ps5000'</span>, <span class="string">'ps5000NoOfStreamingValues'</span>, unitHandle, pNumStreamingValues);
+
+numStreamingValues          = pNumStreamingValues.Value;
+
+fprintf(<span class="string">'Number of samples available from the driver: %u.\n\n'</span>, numStreamingValues);
+</pre><pre class="codeoutput">Number of samples available from the driver: 5000000.
+
+</pre><h2 id="15">Process data</h2><p>Process data post-capture if required - here the data will be plotted.</p><pre class="codeinput"><span class="comment">% Reduce size of arrays if required.</span>
+<span class="keyword">if</span> (totalSamples &lt; maxSamples)
+
+    pBufferChAFinal.Value(totalSamples + 1:end) = [];
+
+<span class="keyword">end</span>
+
+<span class="comment">% Retrieve data for the channels.</span>
+channelAFinal = pBufferChAFinal.Value;
+
+<span class="comment">% Plot total data collected on another figure.</span>
+finalFigure = figure(<span class="string">'Name'</span>,<span class="string">'PicoScope 5203 and 5204 Example - Streaming Mode Capture'</span>, <span class="keyword">...</span>
+    <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>);
+
+finalFigureAxes = axes(<span class="string">'Parent'</span>, finalFigure);
+movegui(finalFigure, <span class="string">'east'</span>);
+hold <span class="string">on</span>;
+
+title(finalFigureAxes, <span class="string">'Streaming Data Acquisition (Final)'</span>);
+xlabel(finalFigureAxes, xLabelStr);
+ylabel(finalFigureAxes, <span class="string">'Voltage (mV)'</span>);
+
+maxYRange = channelARangeMv + 500;
+ylim(finalFigureAxes,[(-1 * maxYRange) maxYRange]);
+
+<span class="comment">% Calculate values for time axis, then plot.</span>
+timeAxis = (double(actualSampleInterval) * double(downSampleRatio)) * (0:totalSamples - 1);
+plot(finalFigureAxes, timeAxis(1:totalSamples), channelAFinal(1:totalSamples));
+
+<span class="keyword">if</span> (hasTriggered)
+
+    plot(finalFigureAxes, timeAxis(triggeredAtIndex), channelAFinal(triggeredAtIndex), <span class="string">'rx'</span>, <span class="string">'MarkerSize'</span>, 10);
+
+<span class="keyword">end</span>
+
+grid(finalFigureAxes, <span class="string">'on'</span>);
+legend(finalFigureAxes, <span class="string">'Channel A'</span>);
+hold(finalFigureAxes, <span class="string">'off'</span>);
+</pre><img vspace="5" hspace="5" src="PicoScope520XStreamingExample_01.png" alt=""> <h2 id="16">Close unit</h2><pre class="codeinput">[status.closeUnit] = calllib(<span class="string">'ps5000'</span>,<span class="string">'ps5000CloseUnit'</span>, unitHandle);
+
+<span class="keyword">if</span> (status.closeUnit == PicoStatus.PICO_OK)
+
+    disp(<span class="string">'Unit closed successfully.'</span>)
+
+<span class="keyword">else</span>
+
+    error(<span class="string">'PS5000StreamingExample:CloseUnitError'</span>, <span class="string">'ps5000CloseUnit - status code %d \n'</span>, status.closeUnit);
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Unit closed successfully.
+</pre><h2 id="17">Unload library files</h2><pre class="codeinput">unloadlibrary(<span class="string">'ps5000'</span>);
+
+<span class="keyword">if</span> (~libisloaded(<span class="string">'ps5000'</span>))
+
+    disp(<span class="string">'ps5000 library unloaded successfully.'</span>);
+
+<span class="keyword">else</span>
+
+    error(<span class="string">'PS5000StreamingExample:LibraryUnloadError'</span>, <span class="string">'ps5000 library not unloaded.'</span>);
+
+<span class="keyword">end</span>
+
+unloadlibrary(<span class="string">'ps5000Wrap'</span>);
+
+<span class="keyword">if</span> (~libisloaded(<span class="string">'ps5000Wrap'</span>))
+
+    disp(<span class="string">'ps5000Wrap library unloaded successfully.'</span>);
+
+<span class="keyword">else</span>
+
+    error(<span class="string">'PS5000StreamingExample:LibraryUnloadError'</span>, <span class="string">'ps5000Wrap library not unloaded.'</span>);
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">ps5000 library unloaded successfully.
+ps5000Wrap library unloaded successfully.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% PicoScope 5203 and 5204 Oscilloscope Streaming Data Capture Example
+% This is a MATLAB script that demonstrates how to use the ps5000 API
+% library functions to capture data in streaming mode from a PicoScope 5203
+% or 5204 oscilloscope using the following approach:
+%
+% * Open a unit 
+% * Display unit information 
+% * Set up an input channel
+% * Verify the timebase index
+% * Setup a trigger
+% * Output a signal from the signal generator
+% * Set data buffers for collection
+% * Start data collection
+% * Retrieve the data values and convert to millivolts
+% * Plot data live if the User chooses to do so
+% * Plot data at the end of the capture
+% * Close the unit
+%
+% *To run this example:*
+% 	
+% Type |PicoScope520XStreamingExample| at the MATLAB command prompt or run
+% from the MATLAB Editor.
+%
+% *Copyright* © 2017 Pico Technology Ltd. See LICENSE file for terms.
+
+%% Clear command window and close all figures
+
+clc;
+close all;
+
+%% Load configuration information
+
+PS5000Config;
+
+%% Parameters used throughout the script
+
+channelA    = ps5000Enuminfo.enPS5000Channel.PS5000_CHANNEL_A;
+channelB    = ps5000Enuminfo.enPS5000Channel.PS5000_CHANNEL_B;
+
+maxADCValue = 32512; % Maximum ADC count value
+oversample  = 1;
+
+%% Load library files
+% Load the ps5000 and ps5000Wrap shared library files using the respective
+% prototype files.
+
+archStr = computer('arch');
+
+ps5000MFile = str2func(strcat('ps5000MFile_', archStr));
+
+if ~libisloaded('ps5000')
+
+    if ispc()
+        
+        loadlibrary('ps5000.dll', ps5000MFile);
+        
+    elseif ismac()
+        
+        error('PS5000StreamingExample:OSNotSupported', ...
+            'Mac OS X not supported, please contact Pico Technology Technical Support for further assistance.');
+        
+    elseif isunix()
+        
+        loadlibrary('libps5000.so', ps5000MFile, 'alias', 'ps5000');
+        
+    end
+
+    if ~libisloaded('ps5000')
+        
+        error('PS5000StreamingExample:LibraryNotLoaded', 'Library ps5000 or ps5000MFile not found');
+        
+    end
+
+end
+
+ps5000WrapMFile = str2func(strcat('ps5000WrapMFile_', archStr));
+
+if ~libisloaded('ps5000Wrap')
+
+    if ispc()
+        
+        loadlibrary('ps5000Wrap.dll', ps5000WrapMFile);
+        
+    elseif ismac()
+        
+        error('PS5000StreamingExample:OSNotSupported', ...
+            'Mac OS X not supported, please contact Pico Technology Technical Support for further assistance.');
+        
+    elseif isunix()
+        
+        loadlibrary('libps5000Wrap.so', ps5000WrapMFile, 'alias', 'ps5000Wrap');
+        
+    end
+
+    if ~libisloaded('ps5000Wrap')
+        
+        error('PS5000StreamingExample:LibraryNotLoaded', 'Library ps5000Wrap or ps5000WrapMFile not found');
+        
+    end
+
+end
+
+% (Optional view library functions)
+% libfunctionsview('ps5000Wrap');
+
+%% Open unit
+% Open connection to oscilloscope and obtain unique handle value for device. 
+
+disp('PicoScope 5203 and 5204 Streaming Example');
+
+unitHandle = 0;
+
+[status.open, unitHandle] = calllib('ps5000', 'ps5000OpenUnit', unitHandle);
+
+if (status.open > PicoStatus.PICO_OK)
+   
+    error('PS5000StreamingExample:DeviceNotOpened', 'Error opening device - status code %d \n', status.open);
+    
+end
+
+%% Diplay unit information
+% Display driver, variant and batch/serial number information
+
+infoLine = blanks(100);
+reqSize = length(infoLine);
+
+% Obtain driver version
+[status.infoDriver, driver]  = calllib('ps5000', ...
+            'ps5000GetUnitInfo', unitHandle, infoLine, ... 
+            length(infoLine), reqSize, PicoStatus.PICO_DRIVER_VERSION);
+        
+% Obtain variant information        
+[status.infoVariant, variant]  = calllib('ps5000', ...
+            'ps5000GetUnitInfo', unitHandle, infoLine, ... 
+            length(infoLine), reqSize, PicoStatus.PICO_VARIANT_INFO);
+        
+% Obtain batch/serial information        
+[status.infoVariant, serial]  = calllib('ps5000', ...
+            'ps5000GetUnitInfo', unitHandle, infoLine, ... 
+            length(infoLine), reqSize, PicoStatus.PICO_BATCH_AND_SERIAL);
+
+fprintf('\nUnit information:\n\n');
+fprintf('Driver : %s\n', driver);
+fprintf('Variant: %s\n', variant);
+fprintf('Serial : %s\n\n', serial);
+
+% Obtain number of channels
+channelCount = str2double(variant(2));
+
+%% Set channels
+% Set channel A to use DC coupling with an input range of ±2 volts 
+
+channelSettings(1).enabled = PicoConstants.TRUE;
+channelSettings(1).dc      = PicoConstants.TRUE;
+channelSettings(1).range   = ps5000Enuminfo.enPS5000Range.PS5000_2V;
+
+channelARangeMv = PicoConstants.SCOPE_INPUT_RANGES(channelSettings(1).range + 1); % Used later in the script
+
+[status.setChannelA]  = calllib('ps5000', 'ps5000SetChannel', unitHandle, channelA, channelSettings(1).enabled, ...
+    channelSettings(1).dc, channelSettings(1).range);
+        
+if (status.setChannelA ~= PicoStatus.PICO_OK)
+    
+    error('PS5000StreamingExample:ChannelNotSet','ps5000SetChannel (A) - status code %d \n', status.setChannelA);
+    
+end
+
+% Turn off channel B
+channelSettings(2).enabled = PicoConstants.FALSE;
+channelSettings(2).dc      = PicoConstants.TRUE;
+channelSettings(2).range   = ps5000Enuminfo.enPS5000Range.PS5000_2V;
+
+channelBRangeMv = PicoConstants.SCOPE_INPUT_RANGES(channelSettings(2).range + 1); % Used later in the script
+
+[status.setChannelB]  = calllib('ps5000', 'ps5000SetChannel', unitHandle, channelB, channelSettings(2).enabled, ...
+    channelSettings(2).dc, channelSettings(2).range);
+        
+if(status.setChannelB ~= PicoStatus.PICO_OK)
+    
+    error('PS5000StreamingExample:ChannelNotSet', 'ps5000SetChannel (B) - status code %d \n', status.setChannelB);
+    
+end
+
+% Set the number of enabled channels with the wrapper library
+enabledChannels = zeros(PicoConstants.DUAL_SCOPE, 1, 'int16');
+
+enabledChannels(1) = channelSettings(1).enabled;
+enabledChannels(2) = channelSettings(2).enabled;
+
+status.setEnabledChannels = calllib('ps5000Wrap', 'setEnabledChannels', unitHandle, enabledChannels);
+
+%% Set up simple trigger
+% Set a simple trigger on channel A - trigger when the signal rises through
+% 500 mV, with an auto timeout of 5 seconds.
+
+triggerEnabled  = PicoConstants.TRUE;
+threshold       = mv2adc(500, channelARangeMv, maxADCValue);
+direction       = ps5000Enuminfo.enThresholdDirection.RISING;
+delay           = 0;
+autoTriggerMs   = 5000; % 5 second auto trigger
+
+[status.setSimpleTrigger] = calllib('ps5000', 'ps5000SetSimpleTrigger', unitHandle, triggerEnabled, ...
+                                channelA, threshold, direction, delay, autoTriggerMs);
+                            
+%% Prompt to connect signal out to channel A
+
+h = helpdlg('Connect Signal Out to channel A and click OK.', 'Connect Input Signal');
+uiwait(h);
+           
+%% Start signal generator
+% Output a sine wave at 1 Hz with a peak-to-peak voltage of 4 volts.
+
+offsetVoltage   = 0; % Offset in microvolts
+pkToPk          = 4000000; % Peak-to-peak amplitude in microvolts
+waveType        = ps5000Enuminfo.enWaveType.PS5000_SINE; % Type of Wave. 
+startFrequency  = 1; % Hz 
+stopFrequency   = 1; % Hz Stop frequency must equal start frequency for constant waveform
+increment       = 0; % Increment in frequency for sweep mode.
+dwellTime       = 0; % Time (sec) spent in each frequency for sweep mode.
+sweepType       = ps5000Enuminfo.enSweepType.UP; % Type of sweep. 
+whiteNoise      = PicoConstants.FALSE;
+shots           = 0;  
+sweeps          = 0; 
+triggerType     = ps5000Enuminfo.enSigGenTrigType.SIGGEN_RISING;
+triggerSource   = ps5000Enuminfo.enSigGenTrigSource.SIGGEN_NONE;
+extInThreshold  = 0; 
+
+disp('Starting signal generator...');
+
+status.setSigGenBuiltIn = calllib('ps5000', 'ps5000SetSigGenBuiltIn', unitHandle, ...
+                            offsetVoltage, pkToPk, waveType, startFrequency, stopFrequency, increment, dwellTime,...
+                            sweepType, whiteNoise, shots, sweeps, triggerType, triggerSource, extInThreshold);
+
+%% Set data buffers
+% Data buffers for channel A - buffers should be set with the driver,
+% and these MUST be passed with application buffers to the wrapper library
+% in order to ensure data is correctly copied.
+
+sampleCount =  100000; % Size of the buffer to collect data from buffer.
+
+ratioMode = ps5000Enuminfo.enRatioMode.RATIO_MODE_NONE;
+
+% Buffers to be passed to the driver
+pDriverBufferChA = libpointer('int16Ptr', zeros(sampleCount, 1, 'int16'));
+
+status.setDataBufferChA = calllib('ps5000', 'ps5000SetDataBuffer', unitHandle, channelA, pDriverBufferChA, sampleCount);
+
+% Application Buffers - these are for copying from the driver into.
+pAppBufferChA = libpointer('int16Ptr', zeros(sampleCount, 1, 'int16'));
+
+status.setAppDriverBuffersA = calllib('ps5000Wrap', 'setAppAndDriverBuffers', unitHandle, channelA, ...
+                                pAppBufferChA, pDriverBufferChA, sampleCount);
+
+%% Start streaming and collect data
+% Collect data for 5 seconds after a trigger event, including any
+% pre-trigger data - maximum array size will depend on the PC's resources -
+% type <matlab:doc('memory') |memory|> at the MATLAB command prompt for
+% further information.
+
+% Define the sampling interval - this will be modified by the driver if the
+% requested sampling interval is not supported
+
+sampleInterval          = 1;
+sampleIntervalTimeUnits = ps5000Enuminfo.enPS5000TimeUnits.PS5000_US;
+
+% Set the number of pre- and post-trigger samples to collect. Note that in
+% streaming mode, the device will begin returning data regardless of
+% whether a trigger is set or not.
+numPreTriggerSamples    = 0;
+numPostTriggerSamples   = 5000000;
+
+% Set other streaming parameters
+autoStop            = PicoConstants.TRUE;
+downSampleRatio     = 1;
+overviewBufferSize  = sampleCount;
+
+% Define buffers to store data collected from the channels. If capturing
+% data without using the autoStop flag, or if using a trigger with the
+% autoStop flag, allocate sufficient space (1.5 times the sum of the number of
+% pre-trigger and post-trigger samples is shown below) to allow for
+% additional pre-trigger data. Pre-allocating the array is more efficient
+% than using <matlab:doc('vertcat') |vertcat|> to combine data.
+
+maxSamples = numPreTriggerSamples + numPostTriggerSamples;
+
+% Take into account the downSampleRatio
+finalBufferLength = round(1.5 * maxSamples / downSampleRatio);
+
+% Prompt User to indicate if they wish to plot live streaming data.
+plotLiveData = questionDialog('Plot live streaming data?', 'Streaming Data Plot');
+
+if (plotLiveData == PicoConstants.TRUE)
+   
+    disp('Live streaming data collection with second plot on completion.');
+    
+else
+    
+    disp('Streaming data plot on completion.');
+    
+end
+
+[status.runStreaming, actualSampleInterval] = calllib('ps5000', 'ps5000RunStreaming', unitHandle, ...
+                                                sampleInterval, sampleIntervalTimeUnits, numPreTriggerSamples, numPostTriggerSamples, ...
+                                                autoStop, downSampleRatio, overviewBufferSize);
+    
+disp('Streaming data...');
+fprintf('Click the STOP button to stop capture or wait for auto stop if enabled.\n\n') 
+
+% Variables to be used when collecting the data:
+
+hasAutoStopOccurred = PicoConstants.FALSE;  % Indicates if the device has stopped automatically.
+newSamples          = 0;                    % Number of new samples returned from the driver.
+previousTotal       = 0;                    % The previous total number of samples.
+totalSamples        = 0;                    % Total samples captured by the device.
+startIndex          = 0;                    % Start index of data in the buffer returned.
+hasTriggered        = 0;                    % To indicate if trigger has occurred.
+triggeredAtIndex    = 0;                    % The index in the overall buffer where the trigger occurred.
+
+% Libpointer objects for streaming data parameters
+
+pOverflow   = libpointer('int16Ptr', 0); 
+pTrigAt     = libpointer('uint32Ptr', 0);
+pAutoStop   = libpointer('int16Ptr', 0); 
+pStartIndex = libpointer('uint32Ptr', 0); 
+
+status.getStreamingLatestValues = PicoStatus.PICO_OK; % OK
+
+% Display a 'Stop' button.
+[stopFig.h, stopFig.h] = stopButton();             
+             
+flag = 1; % Use flag variable to indicate if stop button has been clicked (0)
+setappdata(gcf, 'run', flag);
+
+% Plot Properties - these are for displaying data as it is collected.
+
+% Set x-axis for both live and post-capture plots according to the time
+% units specified..
+    
+switch (sampleIntervalTimeUnits)
+
+    case ps5000Enuminfo.enPS5000TimeUnits.PS5000_FS
+
+        xLabelStr  = 'Time (fs)';
+
+    case ps5000Enuminfo.enPS5000TimeUnits.PS5000_PS
+
+        xLabelStr = 'Time (ps)';
+
+    case ps5000Enuminfo.enPS5000TimeUnits.PS5000_NS
+
+        xLabelStr = 'Time (ns)';
+
+    case ps5000Enuminfo.enPS5000TimeUnits.PS5000_US
+
+        xLabelStr = 'Time (\mus)';
+
+    case ps5000Enuminfo.enPS5000TimeUnits.PS5000_MS
+
+        xLabelStr = 'Time (ms)';
+
+    case ps5000Enuminfo.enPS5000TimeUnits.PS5000_S
+
+        xLabelStr = 'Time (s)';
+
+    otherwise
+
+        xLabelStr = 'Time';
+
+end
+    
+if (plotLiveData == PicoConstants.TRUE)
+    
+    % Plot on a single figure 
+    figure1 = figure('Name','PicoScope 5203 and 5204 Example - Streaming Mode Capture', ...
+         'NumberTitle','off');
+
+     axes1 = axes('Parent', figure1);
+
+    % Estimate x-axis limit to try and avoid using too much CPU resources
+    % when drawing - use max voltage range selected if plotting multiple
+    % channels on the same graph.
+    
+    xlim(axes1, [0 (actualSampleInterval * finalBufferLength)]);
+
+    yRange = channelARangeMv + 500;
+    ylim(axes1,[(-1 * yRange) yRange]);
+
+    hold(axes1,'on');
+    grid(axes1, 'on');
+
+    title(axes1, 'Live Streaming Data Capture');
+    
+    xlabel(axes1, xLabelStr);
+    ylabel(axes1, 'Voltage (mV)');
+    
+end
+
+% Collect samples as long as the |hasAutoStopOccurred| flag has not been
+% set or the call to |getStreamingLatestValues()| does not return an error
+% code (check for STOP button push inside loop).
+while (hasAutoStopOccurred == PicoConstants.FALSE && status.getStreamingLatestValues == PicoStatus.PICO_OK)
+    
+    ready = PicoConstants.FALSE;
+   
+    while (ready == PicoConstants.FALSE)
+
+        status.getStreamingLatestValues = calllib('ps5000Wrap', 'GetStreamingLatestValues', unitHandle);
+
+        ready = calllib('ps5000Wrap', 'IsReady', unitHandle);
+
+       % Give option to abort from here.
+       flag = getappdata(gcf, 'run');
+       drawnow;
+
+       if (flag == 0)
+
+           disp('STOP button clicked - aborting data collection.')
+           break;
+
+       end
+
+       drawnow;
+
+    end
+	
+    % Check for new data values.
+    newSamples =  calllib('ps5000Wrap', 'AvailableData', unitHandle, pStartIndex);
+
+    if (newSamples > 0)
+        
+        % Check if the scope has triggered.
+        triggered = calllib('ps5000Wrap', 'IsTriggerReady', unitHandle, pTrigAt);
+
+        if (triggered == PicoConstants.TRUE)
+
+            hasTriggered    = PicoConstants.TRUE;
+            triggeredAt     = pTrigAt.Value;
+            
+            % Adjust trigger position as MATLAB does not use zero-based
+            % indexing.
+            bufferTriggerPosition = triggeredAt + 1;
+            
+            fprintf('Triggered - index in buffer: %d\n', bufferTriggerPosition);
+
+            hasTriggered = triggered;
+
+            % Set the total number of samples at which the device
+            % triggered.
+            triggeredAtIndex = totalSamples + bufferTriggerPosition;
+
+        end
+        
+        % Position index of data in the buffer(s).
+        startIndex      = pStartIndex.Value;
+        
+        previousTotal   = totalSamples;
+        totalSamples    = totalSamples + newSamples;
+
+        % Printing to console can slow down acquisition - use for
+        % demonstration.
+        fprintf('Collected %d samples, start index: %d, total: %d.\n', newSamples, startIndex, totalSamples);
+        
+        firstValuePosn  = startIndex + 1;
+        lastValuePosn   = startIndex + newSamples;
+        
+        % Convert data values to millivolts from the application buffer(s).
+        bufferChAmV = adc2mv(pAppBufferChA.Value(firstValuePosn:lastValuePosn), channelARangeMv, maxADCValue);
+
+        % Process collected data further if required - this example plots
+        % the data if the User has selected 'Yes' at the prompt.
+        
+        % Copy data into the final buffer(s).
+        pBufferChAFinal.Value((previousTotal + 1):totalSamples) = bufferChAmV;
+        
+        if (plotLiveData == PicoConstants.TRUE)
+            
+            % Time axis
+            % Multiply by ratio mode as samples get reduced.
+            time = (double(actualSampleInterval) * double(downSampleRatio)) * (previousTotal:(totalSamples - 1));
+        
+            plot(time, bufferChAmV);
+
+        end
+        
+        % Clear variables for use again.
+        clear bufferChAmV;
+        clear firstValuePosn;
+        clear lastValuePosn;
+        clear startIndex;
+        clear triggered;
+        clear triggerAt;
+   
+    end
+    
+    % Check if auto stop has occurred.
+    hasAutoStopOccurred = calllib('ps5000Wrap', 'AutoStopped', unitHandle);
+
+    if (hasAutoStopOccurred == PicoConstants.TRUE)
+
+       disp('AutoStop: TRUE - exiting loop.');
+       break;
+
+    end
+   
+    % Check if 'STOP' button pressed
+    flag = getappdata(gcf, 'run');
+    drawnow;
+
+    if (flag == 0)
+
+        disp('STOP button clicked - aborting data collection.')
+        break;
+        
+    end
+ 
+end
+
+% Close the STOP button window.
+if (exist('stopFig', 'var'))
+    
+    close('Stop Button');
+    clear stopFig;
+        
+end
+
+if (plotLiveData == PicoConstants.TRUE)
+    
+    drawnow;
+    
+    % Take hold off the current figure.
+    hold(axes1, 'off');
+    movegui(figure1, 'west');
+    
+end
+
+if (hasTriggered == PicoConstants.TRUE)
+   
+    fprintf('Triggered at overall index: %d\n', triggeredAtIndex);
+    
+end
+
+fprintf('\n');
+
+%% Stop the device
+
+[status.stop] = calllib('ps5000', 'ps5000Stop', unitHandle);
+
+%% Find the number of samples.
+% This is the number of samples held in the driver itself. The actual
+% number of samples collected when using a trigger is likely to be greater.
+% In this example, the total number of samples collected will be used.
+
+pNumStreamingValues         = libpointer('uint32Ptr', 0);
+
+status.numStreamingValues   = calllib('ps5000', 'ps5000NoOfStreamingValues', unitHandle, pNumStreamingValues);
+
+numStreamingValues          = pNumStreamingValues.Value;
+
+fprintf('Number of samples available from the driver: %u.\n\n', numStreamingValues);
+
+%% Process data
+% Process data post-capture if required - here the data will be plotted.
+
+% Reduce size of arrays if required.
+if (totalSamples < maxSamples)
+    
+    pBufferChAFinal.Value(totalSamples + 1:end) = [];
+ 
+end
+
+% Retrieve data for the channels.
+channelAFinal = pBufferChAFinal.Value;
+
+% Plot total data collected on another figure.
+finalFigure = figure('Name','PicoScope 5203 and 5204 Example - Streaming Mode Capture', ...
+    'NumberTitle','off');
+
+finalFigureAxes = axes('Parent', finalFigure);
+movegui(finalFigure, 'east');
+hold on;
+
+title(finalFigureAxes, 'Streaming Data Acquisition (Final)');
+xlabel(finalFigureAxes, xLabelStr);
+ylabel(finalFigureAxes, 'Voltage (mV)');
+
+maxYRange = channelARangeMv + 500;
+ylim(finalFigureAxes,[(-1 * maxYRange) maxYRange]);
+
+% Calculate values for time axis, then plot.
+timeAxis = (double(actualSampleInterval) * double(downSampleRatio)) * (0:totalSamples - 1);
+plot(finalFigureAxes, timeAxis(1:totalSamples), channelAFinal(1:totalSamples));
+
+if (hasTriggered)
+   
+    plot(finalFigureAxes, timeAxis(triggeredAtIndex), channelAFinal(triggeredAtIndex), 'rx', 'MarkerSize', 10);
+    
+end
+
+grid(finalFigureAxes, 'on');
+legend(finalFigureAxes, 'Channel A');
+hold(finalFigureAxes, 'off');
+
+%% Close unit
+
+[status.closeUnit] = calllib('ps5000','ps5000CloseUnit', unitHandle);
+
+if (status.closeUnit == PicoStatus.PICO_OK)
+   
+    disp('Unit closed successfully.')
+    
+else
+    
+    error('PS5000StreamingExample:CloseUnitError', 'ps5000CloseUnit - status code %d \n', status.closeUnit);
+    
+end
+
+%% Unload library files
+
+unloadlibrary('ps5000');
+
+if (~libisloaded('ps5000'))
+   
+    disp('ps5000 library unloaded successfully.');
+    
+else
+    
+    error('PS5000StreamingExample:LibraryUnloadError', 'ps5000 library not unloaded.');
+    
+end
+
+unloadlibrary('ps5000Wrap');
+
+if (~libisloaded('ps5000Wrap'))
+   
+    disp('ps5000Wrap library unloaded successfully.');
+    
+else
+    
+    error('PS5000StreamingExample:LibraryUnloadError', 'ps5000Wrap library not unloaded.');
+    
+end
+##### SOURCE END #####
+--></body></html>

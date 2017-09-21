@@ -364,7 +364,7 @@ switch (sampleIntervalTimeUnits)
 
     otherwise
 
-        xLabelStr = 'Time (\mus)';
+        xLabelStr = 'Time';
 
 end
     
@@ -382,7 +382,7 @@ if (plotLiveData == PicoConstants.TRUE)
     
     xlim(axes1, [0 (actualSampleInterval * finalBufferLength)]);
 
-    yRange = channelARangeMv;
+    yRange = channelARangeMv + 500;
     ylim(axes1,[(-1 * yRange) yRange]);
 
     hold(axes1,'on');
@@ -398,7 +398,6 @@ end
 % Collect samples as long as the |hasAutoStopOccurred| flag has not been
 % set or the call to |getStreamingLatestValues()| does not return an error
 % code (check for STOP button push inside loop).
-
 while (hasAutoStopOccurred == PicoConstants.FALSE && status.getStreamingLatestValues == PicoStatus.PICO_OK)
     
     ready = PicoConstants.FALSE;
@@ -423,7 +422,7 @@ while (hasAutoStopOccurred == PicoConstants.FALSE && status.getStreamingLatestVa
        drawnow;
 
     end
-    
+	
     % Check for new data values.
     newSamples =  calllib('ps5000Wrap', 'AvailableData', unitHandle, pStartIndex);
 
@@ -459,7 +458,7 @@ while (hasAutoStopOccurred == PicoConstants.FALSE && status.getStreamingLatestVa
 
         % Printing to console can slow down acquisition - use for
         % demonstration.
-        fprintf('Collected %d samples, startIndex: %d total: %d.\n', newSamples, startIndex, totalSamples);
+        fprintf('Collected %d samples, start index: %d, total: %d.\n', newSamples, startIndex, totalSamples);
         
         firstValuePosn  = startIndex + 1;
         lastValuePosn   = startIndex + newSamples;
@@ -471,7 +470,7 @@ while (hasAutoStopOccurred == PicoConstants.FALSE && status.getStreamingLatestVa
         % the data if the User has selected 'Yes' at the prompt.
         
         % Copy data into the final buffer(s).
-        pBufferChAFinal.Value(previousTotal + 1:totalSamples) = bufferChAmV;
+        pBufferChAFinal.Value((previousTotal + 1):totalSamples) = bufferChAmV;
         
         if (plotLiveData == PicoConstants.TRUE)
             
@@ -492,7 +491,7 @@ while (hasAutoStopOccurred == PicoConstants.FALSE && status.getStreamingLatestVa
         clear triggerAt;
    
     end
-   
+    
     % Check if auto stop has occurred.
     hasAutoStopOccurred = calllib('ps5000Wrap', 'AutoStopped', unitHandle);
 
@@ -546,7 +545,7 @@ fprintf('\n');
 
 [status.stop] = calllib('ps5000', 'ps5000Stop', unitHandle);
 
-%% Find the Number of Samples.
+%% Find the number of samples.
 % This is the number of samples held in the driver itself. The actual
 % number of samples collected when using a trigger is likely to be greater.
 % In this example, the total number of samples collected will be used.
@@ -559,7 +558,7 @@ numStreamingValues          = pNumStreamingValues.Value;
 
 fprintf('Number of samples available from the driver: %u.\n\n', numStreamingValues);
 
-%% Process Data
+%% Process data
 % Process data post-capture if required - here the data will be plotted.
 
 % Reduce size of arrays if required.
@@ -584,12 +583,12 @@ title(finalFigureAxes, 'Streaming Data Acquisition (Final)');
 xlabel(finalFigureAxes, xLabelStr);
 ylabel(finalFigureAxes, 'Voltage (mV)');
 
-maxYRange = channelARangeMv;
+maxYRange = channelARangeMv + 500;
 ylim(finalFigureAxes,[(-1 * maxYRange) maxYRange]);
 
 % Calculate values for time axis, then plot.
-timeAxis = (double(actualSampleInterval) * double(downSampleRatio)) * (0:length(channelAFinal) - 1);
-plot(finalFigureAxes, timeAxis, channelAFinal);
+timeAxis = (double(actualSampleInterval) * double(downSampleRatio)) * (0:totalSamples - 1);
+plot(finalFigureAxes, timeAxis(1:totalSamples), channelAFinal(1:totalSamples));
 
 if (hasTriggered)
    
