@@ -10,7 +10,7 @@ The examples are provided as MATLAB scripts and live scripts and demonstrate how
 - Rapid Block
 - Streaming
 
-Please note that these examples are not compatible with the PicoScope 5000A/B Series models - these are supported by the 
+Please note that these examples are not compatible with the PicoScope 5000 Series Flexible Resolution Oscilloscopes - these are supported by the 
 [PicoScope 5000 Series - MATLAB Generic Instrument Driver](http://uk.mathworks.com/matlabcentral/fileexchange/42820-picoscope-5000-series-matlab-generic-instrument-driver).
 
 ## Getting started
@@ -28,7 +28,7 @@ Please note that these examples are not compatible with the PicoScope 5000A/B Se
 
 We recommend using the [Add-Ons Explorer](https://uk.mathworks.com/help/matlab/matlab_env/get-add-ons.html) in MATLAB in order to install these files and obtain updates.
 
-If your version of MATLAB does not have the Add-Ons Explorer, download the zip file from the [MATLAB Central File Exchange page](https://uk.mathworks.com/matlabcentral/fileexchange/59657-picoscope-5203-and-5204-examples)
+If your version of MATLAB does not have the Add-Ons Explorer, download the zip file from the [MATLAB Central File Exchange page](https://uk.mathworks.com/matlabcentral/fileexchange/59657-picoscope-5203-and-5204-matlab-examples)
  and add the root and sub-folders to the MATLAB path.
 
 ### Installing drivers
@@ -53,7 +53,7 @@ Please visit our [Support page](https://www.picotech.com/tech-support) to contac
 
 Issues can be reported via the [Issues tab](https://github.com/picotech/picosdk-ps5000-matlab-examples/issues).
 
-Please leave a comment and rating for this submission on our [MATLAB Central File Exchange page](https://uk.mathworks.com/matlabcentral/fileexchange/59657-picoscope-5203-and-5204-examples).
+Please leave a comment and rating for this submission on our [MATLAB Central File Exchange page](https://uk.mathworks.com/matlabcentral/fileexchange/59657-picoscope-5203-and-5204-matlab-examples).
 
 ## Contributing
 
